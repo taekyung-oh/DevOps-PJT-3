@@ -28,7 +28,7 @@ app.post("/checkout", connectDb, async (req, res, next) => {
   const [ result ] = await req.conn.query(
     getProduct('CP-502101')
   )
-  if (result.length > 0) {
+  if (result[0].stock > 0) {
     const product = result[0]
     if (product.stock > 0) {
       await req.conn.query(setStock(product.product_id, product.stock - 1))
