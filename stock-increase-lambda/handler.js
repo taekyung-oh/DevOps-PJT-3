@@ -8,7 +8,7 @@ const {
   queries: { getProduct, increaseStock }
 } = require('./database')
 
-app.put("/product/donut", connectDb, async (req, res, next) => {
+app.post("/product/donut", connectDb, async (req, res, next) => {
   const [ result ] = await req.conn.query(
     getProduct('CP-502101')
   )
