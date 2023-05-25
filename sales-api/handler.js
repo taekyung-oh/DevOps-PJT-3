@@ -35,7 +35,7 @@ app.post("/checkout", connectDb, async (req, res, next) => {
   if (result.length > 0) {
     const product = result[0]
 
-    if (product.stock > 0) {
+    if (product.stock >= orderQty) {
       await req.conn.query(setStock(product.product_id, product.stock - orderQty))
       return res.status(200).json({ message: `구매 완료! 남은 재고: ${product.stock - orderQty}`});
     }
