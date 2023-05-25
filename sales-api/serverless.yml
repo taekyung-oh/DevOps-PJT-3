@@ -8,8 +8,8 @@ provider:
   iam:
     role:
       managedPolicies:
-        - arn:aws:iam::057440442371:policy/GetBigHeadMySQLSecretValue
-        - arn:aws:iam::057440442371:policy/PublishStockEmptySNS
+        - arn:aws:iam::${aws:accountId}:policy/GetBigHeadMySQLSecretValue
+        - arn:aws:iam::${aws:accountId}:policy/PublishStockEmptySNS
 
 functions:
   api:
@@ -17,8 +17,8 @@ functions:
     events:
       - httpApi: '*'
     environment:
-      SECRET_MANAGER_ARN: arn:aws:secretsmanager:ap-northeast-2:057440442371:secret:mysql-connection-K9Z7Ad
-      TOPIC_ARN: arn:aws:sns:ap-northeast-2:057440442371:stock-empty
+      SECRET_MANAGER_ARN: arn:aws:secretsmanager:${aws:region}:${aws:accountId}:secret:mysql-connection-K9Z7Ad
+      TOPIC_ARN: arn:aws:sns:${aws:region}:${aws:accountId}:stock-empty
 
 plugins:
   - serverless-ignore
