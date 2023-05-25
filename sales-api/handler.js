@@ -25,17 +25,56 @@ app.get("/product/donut", connectDb, async (req, res, next) => {
 });
 
 app.post("/checkout", connectDb, async (req, res, next) => {
+
+  const orderQty = req.body.orderQty || 0
+  const sku = req.body.sku
+
   const [ result ] = await req.conn.query(
-    getProduct('CP-502101')
+    getProduct(sku)
   )
   if (result.length > 0) {
     const product = result[0]
+
     if (product.stock > 0) {
-      await req.conn.query(setStock(product.product_id, product.stock - 1))
-      return res.status(200).json({ message: `구매 완료! 남은 재고: ${product.stock - 1}`});
+      await req.conn.query(setStock(product.product_id, product.stock - orderQty))
+      return res.status(200).json({ message: `구매 완료! 남은 재고: ${product.stock - orderQty}`});
     }
     else {
+      const now = new Date().toString()
+
+      const message = `도너츠 재고가 없습니다. 제품을 생산해주세요! \n메시지 작성 시각: ${now}`
+      const params = {
+        Message: message,
+        Subject: '도너츠 재고 부족',
+        MessageAttributes: {
+          productId: {
+            StringValue: product.product_id,
+            DataType: "String",
+          },
+          productName: {
+            StringValue: product.name,
+            DataType: "String",
+          },
+          productSku: {
+            StringValue: sku,
+            DataType: "String",
+          },
+          factoryId: {
+            StringValue: product.factory_id,
+            DataType: "String",
+          },
+          orderQty: {
+            StringValue: orderQty.toString(),
+            DataType: "Number",
+          }  
+        },
+        TopicArn: process.env.TOPIC_ARN
+      }
+    
+      const result = await sns.publish(params).promise()
+
       await req.conn.end()
+
       return res.status(200).json({ message: `구매 실패! 남은 재고: ${product.stock}`});
     }
   } else {

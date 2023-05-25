@@ -13,5 +13,8 @@
     "start": "node handler.local.js",
     "invoke": "serverless invoke --function api",
     "deploy": "serverless deploy"
+  },
+  "devDependencies": {
+    "serverless-ignore": "^0.2.1"
   }
 }

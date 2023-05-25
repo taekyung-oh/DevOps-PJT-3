@@ -1,0 +1,20 @@
+service: stock-lambda
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-northeast-2
+  iam:
+    role:
+      managedPolicies:
+        - arn:aws:iam::057440442371:policy/ReadStockSQS
+functions:
+  function1:
+    handler: index.handler
+    events:
+      - sqs:
+          arn: arn:aws:sqs:ap-northeast-2:057440442371:stock-queue
+          batchSize: 10
+          maximumBatchingWindow: 10
+          functionResponseType: ReportBatchItemFailures
