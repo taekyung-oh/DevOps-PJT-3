@@ -5,9 +5,15 @@ provider:
   name: aws
   runtime: nodejs14.x
   region: ap-northeast-2
+  iam:
+    role:
+      managedPolicies:
+        - arn:aws:iam::${aws:accountId}:policy/GetBigHeadMySQLSecretValue
 
 functions:
   api:
     handler: handler.handler
     events:
       - httpApi: '*'
+    environment:
+      SECRET_MANAGER_ARN: arn:aws:secretsmanager:${aws:region}:${aws:accountId}:secret:mysql-connection-K9Z7Ad  
