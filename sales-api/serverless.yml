@@ -12,8 +12,9 @@ provider:
         - arn:aws:iam::${aws:accountId}:policy/PublishStockEmptySNS
 
 functions:
-  api:
+  sales:
     handler: handler.handler
+    name: sales
     events:
       - httpApi: '*'
     environment:

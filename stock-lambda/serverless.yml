@@ -10,7 +10,8 @@ provider:
       managedPolicies:
         - arn:aws:iam::${aws:accountId}:policy/ReadStockSQS
 functions:
-  function1:
+  stock:
+    name: stock
     handler: index.handler
     events:
       - sqs:

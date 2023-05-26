@@ -11,8 +11,9 @@ provider:
         - arn:aws:iam::${aws:accountId}:policy/GetBigHeadMySQLSecretValue
 
 functions:
-  api:
+  stock-increase:
     handler: handler.handler
+    name: stock-increase
     events:
       - httpApi: '*'
     environment:
